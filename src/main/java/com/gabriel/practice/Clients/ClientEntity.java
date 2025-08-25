@@ -12,15 +12,15 @@ public class ClientEntity {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column (name = "Empresa", nullable = false)
+    @Column (name = "Cliente", nullable = false)
     private String name;
     @Column (name = "Contacto")
     private String contact;
-    @Column (name = "Numero_de_Telefono")
+    @Column (name = "Número_de_Teléfono")
     private Long number;
-    @Column (name = "Correo_Electronico")
+    @Column (name = "Correo_Electrónico")
     private String email;
-    @Column (name = "Direccion")
+    @Column (name = "Dirección")
     private String direction;
     @Column (name = "Productos") /* Relacion one to many a cantidad de productos que nos compra */
     private String product;

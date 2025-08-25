@@ -35,7 +35,7 @@ public class ProductsService {
     /* Logica del GetMapping Individual */
     public ProductsEntity getProductById (Long id) {
         return productsRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("El producto con el id: " + id + " no se encontro"));
+                .orElseThrow(()-> new RuntimeException("El producto con el id: " + id + " no se encontró."));
     }
 
     /* Logica del GetMapping Grupal */
@@ -51,12 +51,13 @@ public class ProductsService {
     /* Logica del PutMappin */
     public ProductsEntity updateProduct (Long id, ProductsEntity updatedProduct) {
         ProductsEntity existingProduct = productsRepository.findById(id)
-                    .orElseThrow(()-> new RuntimeException("El producto con el id: " + id + " no se encontro"));
+                    .orElseThrow(()-> new RuntimeException("El producto con el id: " + id + " no se encontró."));
         existingProduct.setName(updatedProduct.getName());
         existingProduct.setWide(updatedProduct.getWide());
         existingProduct.setLongitud(updatedProduct.getLongitud());
-        existingProduct.setColors(updatedProduct.getColors());
-        existingProduct.setMaterials(updatedProduct.getMaterials());
+        existingProduct.setCilinders(updatedProduct.getCilinders());
+        existingProduct.setImpMaterial(updatedProduct.getImpMaterial());
+        existingProduct.setLamMaterial(updatedProduct.getLamMaterial());
         existingProduct.setDescription(updatedProduct.getDescription());
         existingProduct.setEntryDay(updatedProduct.getEntryDay());
 
@@ -66,7 +67,7 @@ public class ProductsService {
     /* Logica del DeleteMapping */    
     public void deleteProduct(Long id) {
         ProductsEntity product = productsRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("El producto con el id: " + id + " no se encontro"));
+                .orElseThrow(()-> new RuntimeException("El producto con el id: " + id + " no se encontró."));
         productsRepository.delete(product);
     }
 }

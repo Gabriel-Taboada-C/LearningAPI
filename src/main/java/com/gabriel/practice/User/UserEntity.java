@@ -1,11 +1,16 @@
 package com.gabriel.practice.User;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 /* import lombok.NonNull;  
@@ -22,27 +27,36 @@ JPA usa esta clase para mapear filas a objetos Java.
 public class UserEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    @Column (name = "Nombre", nullable = false)
+    @Column (name = "Nombre_de_Usuario", nullable = false)
     private String name;
-    @Column (name = "Apellido", nullable = false)
-    private String surname;
     @Column (name = "Contraseña", nullable = false)
     private String password;
-    @Column (name = "Fecha_de_nacimiento", nullable = false)
-    private Date birthday;
-    
+    @CreationTimestamp
+    @Column (name = "Fecha_de_Creación")
+    private LocalDateTime createdDate;
+    @Enumerated (EnumType.STRING)
+    @Column (name = "Rol", nullable = false)
+    private Rol rol;
+
+    public enum Rol {
+        ADMIN,
+        USER_ADMIN,
+        USER_COMMON
+    }
+
+    /* Crear otra entidad empleado,s con estos datos y agregar dni, edad, fecha de ingreso, puesto, trabaja actualmente (true o false), categoria.  */
     /* Constructor: dentro del entity es útil para los DTOs, no es obligatorio que esté 
      * Con @AllArgsConstructor nos evitamos tener que escribirlo
     */
 
-    public UserEntity (String name, String surname, String password, Date birthdate) {
+    public UserEntity (String name, String password, LocalDateTime createdDate, Rol rol) {
         this.name = name;
-        this.surname = surname;
         this.password = password;
-        this.birthday = birthdate;
+        this.createdDate =createdDate;
+        this.rol = rol;
     }
 
     /* Constructor vacío: es OBLIGATORIO para que JPA pueda generar nuevos objetos
@@ -74,13 +88,6 @@ public class UserEntity {
         this.name = name;
     }
     
-    public String getSurname () {
-        return surname;
-    }
-
-    public void setSurname (String surname) {
-        this.surname = surname;
-    }
 
     public String getPassword () {
         return password;
@@ -90,11 +97,19 @@ public class UserEntity {
         this.password = password;
     }
 
-    public Date getBirthday () {
-        return birthday;
+    public LocalDateTime getCreatedDate () {
+        return createdDate;
     }
 
-    public void setBirthday (Date birthday) {
-        this.birthday = birthday;
+    public void setCreatedDate (LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+     public Rol getRol () {
+        return rol;
+    }
+
+    public void setRol (Rol rol) {
+        this.rol =rol;
     }
 }

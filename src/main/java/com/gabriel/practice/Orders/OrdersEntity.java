@@ -1,11 +1,13 @@
 package com.gabriel.practice.Orders;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,22 +23,25 @@ import lombok.Setter;
 public class OrdersEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column (name = "id_Orden") /* Agregar relacion ManyToMany con productos*/
     private Long id;
-    @Column (name = "Cliente")
+    @Column (name = "Cliente")  /* Agregar relacion OneToMany con ordenes*/
     private String client;
-    @Column (name = "Producto")
+    @Column (name = "Producto") /* Agregar relacion ManyToMany con ordenes*/
     private String product;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
+    @SequenceGenerator (name = "order_seq", sequenceName = "producto_order_seq", allocationSize = 1)
     @Column (name = "Numero_de_Orden")
-    private Long number;
-    @Column (name = "Direccion")
+    private Long orderNumber;
+    @Column (name = "Dirección")
     private String address;
     @Column(name = "Transporte")
-    private String transport;
+    private String carry;
     @Column (name = "Fecha_de_Ingreso")
-    private Date entryDate;
+    private LocalDate entryDate;
     @Column (name = "Fecha_de_Entrega")
-    private Date deliveryDate;
+    private LocalDate deliveryDate;
 
     /* Bujes: tamaño y cantidad
      * Materiales de impresion y laminacion

@@ -1,10 +1,13 @@
 package com.gabriel.practice.Products;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,21 +26,26 @@ que aún no fueron asignados por la base de datos.
 public class ProductsEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column (name = "id_Producto")
     private Long id;
-    @Column (name = "Nombre_Producto")
+    @Column (name = "Nombre_Producto", nullable = false)
     private String name;
     /*private String client; one to many */
-    @Column (name = "Ancho")
+    @Column (name = "Ancho_Producto")
     private String wide;
-    @Column (name = "Largo")
+    @Column (name = "Largo_Producto")
     private String longitud;
-    @Column (name = "Colores")
-    private String colors;
-    @Column (name = "Materia_Prima")
-    private String materials;
-    @Column (name = "Descripcion_del_Producto")
+    @Column (name = "Cantidad_de_Cilindros", nullable = false)
+    private String cilinders;
+    @Column (name = "Material_de_Impresión", nullable = false)
+    private String impMaterial;
+    @Column (name = "Material_de_Laminación")
+    private String lamMaterial;
+    @Column (name = "Descripción_del_Producto", nullable = false)
     private String description;
-    @Column (name = "Dia_de_Ingreso")
-    private Date entryDay;
+
+    @CreationTimestamp
+    @Column (name = "Dia_de_Creación", updatable = false)
+    private LocalDateTime entryDay;
 }

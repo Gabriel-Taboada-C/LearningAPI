@@ -16,7 +16,7 @@ public class ClientService {
 
     public ClientEntity getClientsById (Long id) {
         return clientRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("El cliente con el id: " + id + " no se encontro"));
+                .orElseThrow(()-> new RuntimeException("El cliente con el id: " + id + " no se encontró."));
     }
 
     public ClientEntity saveClient (ClientEntity client) {
@@ -25,7 +25,7 @@ public class ClientService {
 
     public ClientEntity updateClient (Long id, ClientEntity updatedClient) {
         ClientEntity existingClient = clientRepository.findById(id)
-                    .orElseThrow(()-> new RuntimeException("El cliente con el id: " + id + " no se encontro"));
+                    .orElseThrow(()-> new RuntimeException("El cliente con el id: " + id + " no se encontró."));
         existingClient.setName(updatedClient.getName());
         existingClient.setContact(updatedClient.getContact());
         existingClient.setNumber(updatedClient.getNumber());
@@ -38,7 +38,7 @@ public class ClientService {
 
     public void deleteClient (Long id) {
         ClientEntity client = clientRepository.findById(id)
-                    .orElseThrow(()-> new RuntimeException("El cliente con el id: " + id + " no se encontro"));
+                    .orElseThrow(()-> new RuntimeException("El cliente con el id: " + id + " no se encontró."));
         clientRepository.delete(client);
     }
 }

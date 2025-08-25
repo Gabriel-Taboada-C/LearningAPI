@@ -19,7 +19,7 @@ public class InksService {
 
     public InksEntity getInksById (Long id) {
         return inksRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("La tinta con el id: " + id + " no se encontro"));
+                .orElseThrow(()-> new RuntimeException("La tinta con el id: " + id + " no se encontró."));
     }
 
     public InksEntity saveInk (InksEntity ink) {
@@ -28,7 +28,7 @@ public class InksService {
 
     public InksEntity updateInk (Long id, InksEntity updatedInk) {
         InksEntity existingInk = inksRepository.findById (id)
-                .orElseThrow(()-> new RuntimeException("La tinta con el id: " + id + " no se encontro"));
+                .orElseThrow(()-> new RuntimeException("La tinta con el id: " + id + " no se encontró."));
         existingInk.setMark(updatedInk.getMark());
         existingInk.setColor(updatedInk.getColor());
         existingInk.setCode(updatedInk.getCode());
@@ -39,7 +39,7 @@ public class InksService {
 
     public void deleteInk (Long id) {
         InksEntity ink = inksRepository.findById (id)
-                .orElseThrow(()-> new RuntimeException("La tinta con el id: " + id + " no se encontro"));
+                .orElseThrow(()-> new RuntimeException("La tinta con el id: " + id + " no se encontró."));
         inksRepository.delete(ink);
     }
 }

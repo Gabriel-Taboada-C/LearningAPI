@@ -48,7 +48,7 @@ public class OrdersController {
     public String deleteOrder (@PathVariable Long id) {
         ordersService.deleteOrder(id);
 
-        return "El producto con el id: " + id + " se elimino correctamente";
+        return "El producto con el id: " + id + " se eliminó correctamente.";
     }
 
    /*  

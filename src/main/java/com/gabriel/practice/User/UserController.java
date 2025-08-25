@@ -60,7 +60,7 @@ public class UserController {
     @GetMapping("/{id}") // Esto seria un getUserById
     public UserEntity getUserById(@PathVariable UUID id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No se encontro al usuario con el id: " + id));
+                .orElseThrow(() -> new RuntimeException("El usuario con el id: " + id + " no se encontró."));
 
     }
 
@@ -82,11 +82,11 @@ public class UserController {
     @PutMapping("/{id}")
     public UserEntity updateUser(@PathVariable UUID id, @RequestBody UserEntity detallesUser) {
         UserEntity user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No se encontro el usuario con el id: " + id));
+                .orElseThrow(() -> new RuntimeException("El usuario con el id: " + id + " no se encontró."));
         user.setName(detallesUser.getName());
-        user.setSurname(detallesUser.getSurname());
         user.setPassword(detallesUser.getPassword());
-        user.setBirthday(detallesUser.getBirthday());
+        user.setCreatedDate(detallesUser.getCreatedDate());
+        user.setRol(detallesUser.getRol());
 
         return userRepository.save(user);
     }
@@ -95,10 +95,10 @@ public class UserController {
     public String deleteUser(@PathVariable UUID id) {
 
         UserEntity user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No se encontro el usuario con el id: " + id));
+                .orElseThrow(() -> new RuntimeException("El usuario con el id: " + id + " no se encontró."));
 
         userRepository.delete(user);
-        return "El usuario con el id: " + id + "se eliminado correctamente";
+        return "El usuario con el id: " + id + "se eliminó correctamente.";
     }
 
 }

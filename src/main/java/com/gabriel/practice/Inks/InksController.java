@@ -47,7 +47,7 @@ public class InksController {
     public String deleteInk (@PathVariable Long id) {
         inksService.deleteInk(id);
 
-        return "La tinta con el id: " + id + " se elimino correctamente";
+        return "La tinta con el id: " + id + " se eliminó correctamente.";
     }
     
 }

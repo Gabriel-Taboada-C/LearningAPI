@@ -50,6 +50,6 @@ public class ClientController {
     public String deleteClient (@PathVariable Long id) {
         clientService.deleteClient(id);
 
-        return "El cliente con el id: " + id + "se elimino correctamente.";
+        return "El cliente con el id: " + id + " se eliminó correctamente.";
     }
 }

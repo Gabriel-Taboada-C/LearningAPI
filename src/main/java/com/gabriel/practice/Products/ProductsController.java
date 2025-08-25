@@ -51,7 +51,7 @@ public class ProductsController {
     public String deleteProduct (@PathVariable Long id) {
 
         productsService.deleteProduct(id);
-        return "El producto con el id: " + id + "se elimino correctamente.";
+        return "El producto con el id: " + id + " se eliminó correctamente.";
     }
     
 }

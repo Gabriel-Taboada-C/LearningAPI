@@ -15,7 +15,7 @@ public class OrdersService {
 
     public OrdersEntity getOrderById (Long id) {
         return ordersRepository.findById(id)
-                    .orElseThrow(()->new RuntimeException("La orden con el id: " + id + " no se encontro"));
+                    .orElseThrow(()->new RuntimeException("La orden con el id: " + id + " no se encontró."));
     }
 
     public List <OrdersEntity> getOrders () {
@@ -28,12 +28,12 @@ public class OrdersService {
 
     public OrdersEntity updateOrder (Long id, OrdersEntity updatedOrder) {
         OrdersEntity existingOrder = ordersRepository.findById(id)
-                    .orElseThrow(()->new RuntimeException("La orden con el id: " + id + " no se encontro"));
+                    .orElseThrow(()->new RuntimeException("La orden con el id: " + id + " no se encontró."));
         existingOrder.setClient(updatedOrder.getClient());
         existingOrder.setProduct(updatedOrder.getProduct());
-        existingOrder.setNumber(updatedOrder.getNumber());
+        existingOrder.setOrderNumber(updatedOrder.getOrderNumber());
         existingOrder.setAddress(updatedOrder.getAddress());
-        existingOrder.setTransport(updatedOrder.getTransport());
+        existingOrder.setCarry(updatedOrder.getCarry());
         existingOrder.setEntryDate(updatedOrder.getEntryDate());
         existingOrder.setDeliveryDate(updatedOrder.getDeliveryDate());
 
@@ -42,7 +42,7 @@ public class OrdersService {
 
     public void deleteOrder (Long id) {
         OrdersEntity order = ordersRepository.findById(id)
-                    .orElseThrow(()->new RuntimeException("La orden con el id: " + id + " no se encontro"));
+                    .orElseThrow(()->new RuntimeException("La orden con el id: " + id + " no se encontró."));
         ordersRepository.delete(order);
 
     }
