@@ -1,0 +1,43 @@
+package com.gabriel.practice.Configuration;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+/* Agregar importacion a mano */
+import static org.springframework.security.config.Customizer.withDefaults;
+
+import lombok.RequiredArgsConstructor;
+
+@Configuration
+/* @Configuration indica que esta clase va a tener
+* métodos que van a estar anotados con @Bean
+* los cuales se van a utilizar para crear y configurar
+* los objetos requeridos por nuestra aplicación
+*/
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    /* SecurityFilterChain es un método que va a contener toda
+     * la cadena de filtros que se van a ir ejecutando
+     */
+
+// Configuración de endpoints públicos y protegidos:
+    @Bean
+    public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception
+    {
+        return http //Retorno el http siempre y cuando pase una cadena de filtros siguientes:
+            .csrf(csrf->
+                csrf
+                .disable())
+            .authorizeHttpRequests(authRequest ->
+                authRequest
+                    .requestMatchers("/auth/**").permitAll()
+                    .anyRequest().authenticated()
+                    )
+            .formLogin(withDefaults())
+            .build();
+    }
+}
