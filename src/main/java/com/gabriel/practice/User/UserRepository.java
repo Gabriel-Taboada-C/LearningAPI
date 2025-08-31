@@ -15,5 +15,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserRepository extends JpaRepository <UserEntity,UUID>{
 
     Optional<UserEntity> findByName(String name);
-    /*Optional es una forma segura de manejar valores que pueden estar vacíos o nulos. */
+    /*Optional es una forma segura de manejar valores que pueden estar vacíos o nulos. 
+     * Devuelve UN solo valor, para varios valores se utiliza List
+    */
 }

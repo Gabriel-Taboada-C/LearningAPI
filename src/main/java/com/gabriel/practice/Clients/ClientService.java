@@ -2,6 +2,9 @@ package com.gabriel.practice.Clients;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class ClientService {
 
     private final ClientRepository clientRepository;

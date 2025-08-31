@@ -11,33 +11,36 @@ import static org.springframework.security.config.Customizer.withDefaults;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
-/* @Configuration indica que esta clase va a tener
-* métodos que van a estar anotados con @Bean
-* los cuales se van a utilizar para crear y configurar
-* los objetos requeridos por nuestra aplicación
-*/
+/*
+ * @Configuration indica que esta clase va a tener
+ * métodos que van a estar anotados con @Bean
+ * los cuales se van a utilizar para crear y configurar
+ * los objetos requeridos por nuestra aplicación
+ */
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    /* SecurityFilterChain es un método que va a contener toda
+    /*
+     * SecurityFilterChain es un método que va a contener toda
      * la cadena de filtros que se van a ir ejecutando
      */
 
-// Configuración de endpoints públicos y protegidos:
+    // Configuración de endpoints públicos y protegidos:
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception
-    {
-        return http //Retorno el http siempre y cuando pase una cadena de filtros siguientes:
-            .csrf(csrf->
-                csrf
-                .disable())
-            .authorizeHttpRequests(authRequest ->
-                authRequest
-                    .requestMatchers("/auth/**").permitAll()
-                    .anyRequest().authenticated()
-                    )
-            .formLogin(withDefaults())
-            .build();
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http // Retorno el http siempre y cuando pase una cadena de filtros siguientes:
+                .csrf(csrf -> csrf
+                        .disable()) // Anular la proteccion csrf
+                /*
+                 * CSRF: Cros-Site Request Forgery es una medida de seguridad que se utiliza
+                 * para agregar a las solicitudes POST
+                 * una autenticacion basada en un token csrf value, pero vamos a utilizar JWT
+                 */
+                .authorizeHttpRequests(authRequest -> authRequest
+                        .requestMatchers("/auth/**").permitAll()
+                        .anyRequest().authenticated())
+                .formLogin(withDefaults()) // Formulario de Login que provee Spring Security
+                .build();
     }
 }
