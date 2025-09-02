@@ -2,11 +2,18 @@ package com.gabriel.practice.Configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.gabriel.practice.Jwt.JwtAuthenticationFilter;
+
 /* Agregar importacion a mano */
-import static org.springframework.security.config.Customizer.withDefaults;
+/* Elimino dependencia */
+/* import static org.springframework.security.config.Customizer.withDefaults; */
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +27,9 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final AuthenticationProvider authProvider;
 
     /*
      * SecurityFilterChain es un método que va a contener toda
@@ -40,7 +50,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authRequest -> authRequest
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated())
-                .formLogin(withDefaults()) // Formulario de Login que provee Spring Security
+                /* .formLogin(withDefaults()) Formulario de Login que provee Spring Security */
+                .sessionManagement(sessionManager ->
+                        sessionManager
+                          .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)      
                 .build();
     }
 }
