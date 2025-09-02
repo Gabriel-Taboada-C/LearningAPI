@@ -1,9 +1,14 @@
 package com.gabriel.practice.User;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +21,7 @@ import jakarta.persistence.Table;
 /* import lombok.NonNull;  
  * Es lo mismo que @Column (nullable = false)
 */
+import lombok.Builder;
 
 @Entity
 /* 
@@ -23,8 +29,11 @@ import jakarta.persistence.Table;
 Define cómo es la tabla en la base de datos.
 JPA usa esta clase para mapear filas a objetos Java. 
 */
+@Builder
 @Table (name="Usuarios")
-public class UserEntity {
+public class UserEntity implements UserDetails{
+
+/* UserDetails es una clase ya creada que sirve para la autenticacion */
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -52,7 +61,7 @@ public class UserEntity {
      * Con @AllArgsConstructor nos evitamos tener que escribirlo
     */
 
-    public UserEntity (String name, String password, LocalDateTime createdDate, Rol rol) {
+    public UserEntity (UUID id, String name, String password, LocalDateTime createdDate, Rol rol) {
         this.name = name;
         this.password = password;
         this.createdDate =createdDate;
@@ -111,5 +120,23 @@ public class UserEntity {
 
     public void setRol (Rol rol) {
         this.rol =rol;
+    }
+
+    /* ASI SE AUTOGENERA AL IMPLEMENTAR LOS METODOS DEL USERDETAILS 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
+    } */
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(rol.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        // Este metodo no esta en el video asi que ????????
+        throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
     }
 }
