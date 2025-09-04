@@ -4,10 +4,12 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -45,7 +47,55 @@ public class JwtService {
     private Key getKey() {
         byte[] keyBytes=Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
+
     }
 
+    /* -------------------------------------------------------------------------------------------------- */
+    /* Esta parte se realiza luego de terminar de configurar el JwtAuthenticationFilter 
+     * Creamos metodos requeridos para que el filtro de JWT funcione
+    */
+
+    //Tercero creamos este metodo requerido por JwtAuthFilter
+    public String getUsernameFromToken(String token) {
+        return getClaim(token, Claims::getSubject);
+    }
+
+    //Sexto y ultimo creamos este metodo requerido por JwtAuthFilter
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String username=getUsernameFromToken(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+
+    //Primero creamos este metodo para acceder a los claims (mediante la libreria Jwts)
+    private Claims getAllClaims(String token) 
+    {
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+
+    //Segundo creamos un metodo publico GENERICO (T)
+    public <T> T getClaim(String token, Function <Claims,T> claimsResolver)
+    {
+        final Claims claims= getAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+
+    // Cuarto creamos esta funcion necesaria para el metodo isTokenValid()
+    private Date getExpiration(String token)
+    {
+        return getClaim(token, Claims::getExpiration);
+    }
+
+    //Quinto creamos esta funcion necesaria para el metodo isTokenValid()
+    private boolean isTokenExpired(String token)
+    {
+        return getExpiration(token).before(new Date());
+    }
 
 }

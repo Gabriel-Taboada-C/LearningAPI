@@ -9,10 +9,22 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpHeaders;
+import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+
+//Minuto 56:40
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
 
     /*
      * OncePerRequestFilter es una clase abstracta que se utiliza para crear filtros
@@ -29,14 +41,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         // Este metodo va a realizar TODOS los filtros relacionados al Token (JWT)
 
-        // Primero obtenemos el token
+        // Primero obtenemos el token y obtenemos el username
         final String token = getTokenFromRequest(request);
+        final String username;
 
         // Si el token es nulo vamos a devolverle a la cadena de filtros el control
         if (token == null) {
             filterChain.doFilter(request, response);
             return;
         }
+
+        username = jwtService.getUsernameFromToken(token);
+
+        //Si el token es nulo y no se encuentra en el SecurityContextHolder lo buscamos en la DB
+        if (username!=null && SecurityContextHolder.getContext().getAuthentication()==null)
+        {
+            UserDetails userDetails=userDetailsService.loadUserByUsername(username);
+
+            //Si el token es valido debo actualizar el SecurityContextHolder
+            if (jwtService.isTokenValid(token,userDetails))
+            {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    null,
+                    userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+        /* Debo configurar los siguientes metodos en JwtService:
+        - getUsernameFromToken()
+        - isTokenValid */
+
         filterChain.doFilter(request, response);
     }
 
