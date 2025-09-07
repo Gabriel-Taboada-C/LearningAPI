@@ -62,6 +62,7 @@ public class UserEntity implements UserDetails{
     */
 
     public UserEntity (UUID id, String name, String password, LocalDateTime createdDate, Rol rol) {
+        this.id = id; //Agregado por cambio de version io.jsonwebtoken a 0.12.3 para poder usar .getId
         this.name = name;
         this.password = password;
         this.createdDate =createdDate;

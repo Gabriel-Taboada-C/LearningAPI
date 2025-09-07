@@ -2,7 +2,7 @@ package com.gabriel.practice.Authorization;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
+/* import org.springframework.security.core.userdetails.UserDetails; en desuso por version 0.12.3*/
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +22,15 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
+
+    /* Al cambiar la version de io.jsonwebtoken de 0.11.5 a 0.12.33
+     * se cambia UserDetails por UserEntity (tambien en JwtService)
+     * esto nos permite obtener el valor de id para los claims
+     * con UserDetails este parametro no puede obtenerse
+     */
     public AuthResponse login (LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getName(), request.getPassword()));
-        UserDetails user = userRepository.findByName(request.getName()).orElseThrow();
+        UserEntity user = userRepository.findByName(request.getName()).orElseThrow();
         String token = jwtService.getToken(user);
         return AuthResponse.builder()
             .token(token)

@@ -48,7 +48,7 @@ public class SecurityConfig {
                  * una autenticacion basada en un token csrf value, pero vamos a utilizar JWT
                  */
                 .authorizeHttpRequests(authRequest -> authRequest
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll() // Login y registro publicos
                         .anyRequest().authenticated())
                 /* .formLogin(withDefaults()) Formulario de Login que provee Spring Security */
                 .sessionManagement(sessionManager ->
