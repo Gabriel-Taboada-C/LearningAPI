@@ -1,37 +1,47 @@
 package com.gabriel.practice.Clients;
 
+import java.util.List;
+
+import com.gabriel.practice.Orders.OrdersEntity;
+import com.gabriel.practice.Products.ProductsEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class ClientEntity {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column (name = "cliente_id")
     private Long id;
-    @Column (name = "Cliente", nullable = false)
+    @Column (name = "cliente", nullable = false)
     private String name;
-    @Column (name = "Contacto")
+    @Column (name = "contacto")
     private String contact;
-    @Column (name = "Número_de_Teléfono")
+    @Column (name = "cúmero_de_teléfono")
     private Long number;
-    @Column (name = "Correo_Electrónico")
+    @Column (name = "correo_electrónico")
     private String email;
-    @Column (name = "Dirección")
+    @Column (name = "dirección")
     private String direction;
-    @Column (name = "Productos") /* Relacion one to many a cantidad de productos que nos compra */
-    private String product;
+    /* Relacion OneToMany a cantidad de productos: 1 cliente tiene muchos productos */
+    @OneToMany (mappedBy = "client")
+    private List<ProductsEntity> products;
+    /* Relacion OneToMany a ordenes solicitadas */
+    @OneToMany (mappedBy = "client")
+    private List<OrdersEntity> orders;
 
     /* Constructor */
-    public ClientEntity (String name, String contact, Long number, String direction, String product) {
+    public ClientEntity (String name, String contact, Long number, String direction) {
         this.name = name;
         this.contact = contact;
         this.number = number;
         this.direction = direction;
-        this.product = product;
     }
 
     /* Constructor vacio para JPA */
@@ -82,14 +92,5 @@ public class ClientEntity {
     public void setDirection (String direction) {
         this.direction = direction;
     }
-
-    public String getProduct () {
-        return product;
-    }
-
-    public void setProduct (String product) {
-        this.product = product;
-    }
-
 
 }

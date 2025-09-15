@@ -17,13 +17,13 @@ import com.gabriel.practice.Jwt.JwtAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
 /*
- * @Configuration indica que esta clase va a tener
- * métodos que van a estar anotados con @Bean
- * los cuales se van a utilizar para crear y configurar
- * los objetos requeridos por nuestra aplicación
- */
+* @Configuration indica que esta clase va a tener
+* métodos que van a estar anotados con @Bean
+* los cuales se van a utilizar para crear y configurar
+* los objetos requeridos por nuestra aplicación
+*/
+@Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -40,6 +40,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http // Retorno el http siempre y cuando pase una cadena de filtros siguientes:
+                .headers(headers -> headers.frameOptions().disable()) // habilitar frames (necesario para H2)
                 .csrf(csrf -> csrf
                         .disable()) // Anular la proteccion csrf
                 /*
@@ -49,6 +50,7 @@ public class SecurityConfig {
                  */
                 .authorizeHttpRequests(authRequest -> authRequest
                         .requestMatchers("/auth/**").permitAll() // Login y registro publicos
+                        .requestMatchers("/h2-console/**").permitAll() // h2 publico
                         .anyRequest().authenticated())
                 /* .formLogin(withDefaults()) Formulario de Login que provee Spring Security */
                 .sessionManagement(sessionManager ->

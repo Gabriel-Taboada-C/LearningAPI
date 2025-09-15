@@ -3,6 +3,8 @@ package com.gabriel.practice.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,7 +39,7 @@ public class ApplicationConfig {
      */
 
   /*   
-    ESTE CODIGO QUEDO EN DESUSO CON SPRING SECURITY 6
+    ESTE CODIGO QUEDO EN DESUSO CON SPRING SECURITY 6 */
     @Bean
     public AuthenticationProvider authenticationProvider ()
     {
@@ -45,7 +47,7 @@ public class ApplicationConfig {
         authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
-    } */
+    } 
 
     @Bean
     public PasswordEncoder passwordEncoder() {

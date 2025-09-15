@@ -4,11 +4,17 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.gabriel.practice.Clients.ClientEntity;
+import com.gabriel.practice.Orders.OrdersEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,25 +33,31 @@ public class ProductsEntity {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "id_Producto")
+    @Column (name = "producto_id")
     private Long id;
-    @Column (name = "Nombre_Producto", nullable = false)
+    @Column (name = "nombre_producto", nullable = false)
     private String name;
-    /*private String client; one to many */
-    @Column (name = "Ancho_Producto")
+    /*Relacion OneToOne con orden: 1 producto pertenece a 1 solo pedido */
+    @OneToOne (mappedBy = "product")
+    private OrdersEntity order;
+    /*Relacion ManyToOne con cliente: muchos productos pertenecen a 1 solo cliente */
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private ClientEntity client;
+    @Column (name = "ancho_producto")
     private String wide;
-    @Column (name = "Largo_Producto")
+    @Column (name = "largo_producto")
     private String longitud;
-    @Column (name = "Cantidad_de_Cilindros", nullable = false)
-    private String cilinders;
-    @Column (name = "Material_de_Impresión", nullable = false)
+    @Column (name = "cantidad_de_cilindros", nullable = false)
+    private Long cilinders;
+    @Column (name = "material_de_impresión", nullable = false)
     private String impMaterial;
-    @Column (name = "Material_de_Laminación")
+    @Column (name = "material_de_laminación")
     private String lamMaterial;
-    @Column (name = "Descripción_del_Producto", nullable = false)
+    @Column (name = "descripción_del_producto", nullable = false)
     private String description;
 
     @CreationTimestamp
-    @Column (name = "Dia_de_Creación", updatable = false)
+    @Column (name = "dia_de_creación", updatable = false)
     private LocalDateTime entryDay;
 }

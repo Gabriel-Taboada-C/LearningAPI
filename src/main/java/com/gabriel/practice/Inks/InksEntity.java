@@ -24,14 +24,14 @@ public class InksEntity {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "Marca", nullable = false)
+    @Column(name = "marca", nullable = false)
     private String mark;
-    @Column(name = "Color", nullable = false)
+    @Column(name = "color", nullable = false)
     private String color;
-    @Column(name = "Codigo_de_Tinta")
+    @Column(name = "codigo_de_tinta")
     private String code;
     @CreationTimestamp
-    @Column(name = "Fecha_de_Ingreso")
+    @Column(name = "fecha_de_ingreso")
     private LocalDateTime entryDate;
 
 }

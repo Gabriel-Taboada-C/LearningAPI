@@ -34,7 +34,6 @@ public class ClientService {
         existingClient.setNumber(updatedClient.getNumber());
         existingClient.setEmail(updatedClient.getEmail());
         existingClient.setDirection(updatedClient.getDirection());
-        existingClient.setProduct(updatedClient.getProduct());
 
         return clientRepository.save(existingClient);
     }

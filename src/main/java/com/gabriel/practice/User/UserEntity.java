@@ -36,7 +36,11 @@ public class UserEntity implements UserDetails{
 /* UserDetails es una clase ya creada que sirve para la autenticacion */
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue 
+    /* @GeneratedValue (strategy = GenerationType.IDENTITY)
+     * CON H2 ESTO DA ERROR Y NO GENERA LOS id POR NO
+     * SOPORTAR LOS DATOS DE TIPO UUID
+    */
     private UUID id;
 
     @Column (name = "Nombre_de_Usuario", nullable = false)

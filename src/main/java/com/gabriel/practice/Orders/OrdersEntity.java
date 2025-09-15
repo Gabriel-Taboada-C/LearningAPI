@@ -2,12 +2,17 @@ package com.gabriel.practice.Orders;
 
 import java.time.LocalDate;
 
+import com.gabriel.practice.Clients.ClientEntity;
+import com.gabriel.practice.Products.ProductsEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,23 +29,25 @@ public class OrdersEntity {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "id_Orden") /* Agregar relacion ManyToMany con productos*/
+    @Column (name = "orden_id")
     private Long id;
-    @Column (name = "Cliente")  /* Agregar relacion OneToMany con ordenes*/
-    private String client;
-    @Column (name = "Producto") /* Agregar relacion ManyToMany con ordenes*/
-    private String product;
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq")
-    @SequenceGenerator (name = "order_seq", sequenceName = "producto_order_seq", allocationSize = 1)
-    @Column (name = "Numero_de_Orden")
+    /* Relacion OneToMany con clientes: muchas ordenes pertenecen a 1 solo cliente*/
+    @ManyToOne
+    @JoinColumn (name = "cliente_id")
+    private ClientEntity client;
+    /* Relacion OneToOne con productos: 1 orden pertenece a 1 solo producto*/
+    @OneToOne
+    @JoinColumn (name = "producto_id")
+    private ProductsEntity product;
+    @Column (name = "numero_de_orden")
     private Long orderNumber;
-    @Column (name = "Dirección")
+    @Column (name = "dirección")
     private String address;
-    @Column(name = "Transporte")
+    @Column(name = "transporte")
     private String carry;
-    @Column (name = "Fecha_de_Ingreso")
+    @Column (name = "fecha_de_ingreso")
     private LocalDate entryDate;
-    @Column (name = "Fecha_de_Entrega")
+    @Column (name = "fecha_de_entrega")
     private LocalDate deliveryDate;
 
     /* Bujes: tamaño y cantidad
