@@ -15,7 +15,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 /* import lombok.NonNull;  
@@ -141,7 +140,6 @@ public class UserEntity implements UserDetails{
 
     @Override
     public String getUsername() {
-        // Este metodo no esta en el video asi que ????????
-        throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
+        return name;
     }
 }

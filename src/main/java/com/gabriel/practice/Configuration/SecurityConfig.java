@@ -40,7 +40,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http // Retorno el http siempre y cuando pase una cadena de filtros siguientes:
-                .headers(headers -> headers.frameOptions().disable()) // habilitar frames (necesario para H2)
+                /* .headers(headers -> headers.frameOptions().disable()) */ // habilitar frames (necesario para H2)
+                // Spring Security 6.1+ frameOptions() quedó deprecated.
+                // Lo reemplazaron por la API frameOptions(Customizer).
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .csrf(csrf -> csrf
                         .disable()) // Anular la proteccion csrf
                 /*
