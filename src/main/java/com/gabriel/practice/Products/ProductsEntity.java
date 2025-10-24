@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.gabriel.practice.Cilinders.CilindersEntity;
 import com.gabriel.practice.Clients.ClientEntity;
 import com.gabriel.practice.Orders.OrdersEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +37,8 @@ public class ProductsEntity {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name = "producto_id")
     private Long id;
+    @Column (name = "Std")
+    private String code;
     @Column (name = "nombre_producto", nullable = false)
     private String name;
     /*Relacion OneToOne con orden: 1 producto pertenece a 1 solo pedido */
@@ -48,8 +52,10 @@ public class ProductsEntity {
     private String wide;
     @Column (name = "largo_producto")
     private String longitud;
-    @Column (name = "cantidad_de_cilindros", nullable = false)
-    private Long cilinders;
+    /* @Column (name = "cantidad_de_cilindros", nullable = false)
+    private Long cilinders; */
+    @OneToOne (mappedBy = "product", cascade = CascadeType.ALL)
+    private CilindersEntity cilinders;
     @Column (name = "material_de_impresión", nullable = false)
     private String impMaterial;
     @Column (name = "material_de_laminación")
@@ -60,4 +66,5 @@ public class ProductsEntity {
     @CreationTimestamp
     @Column (name = "dia_de_creación", updatable = false)
     private LocalDateTime entryDay;
+
 }

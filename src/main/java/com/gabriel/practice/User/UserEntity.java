@@ -29,6 +29,7 @@ Define cómo es la tabla en la base de datos.
 JPA usa esta clase para mapear filas a objetos Java. 
 */
 @Builder
+// Importante: para relaciones como @OneToMany, se recomienda no usar @Builder directamente en la entidad, o usarlo con precaución usando @Builder.Default.
 @Table (name="Usuarios")
 public class UserEntity implements UserDetails{
 

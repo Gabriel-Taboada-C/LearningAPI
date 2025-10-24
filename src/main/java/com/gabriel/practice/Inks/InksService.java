@@ -30,7 +30,7 @@ public class InksService {
         InksEntity existingInk = inksRepository.findById (id)
                 .orElseThrow(()-> new RuntimeException("La tinta con el id: " + id + " no se encontró."));
         existingInk.setMark(updatedInk.getMark());
-        existingInk.setColor(updatedInk.getColor());
+        existingInk.setColores(updatedInk.getColores());
         existingInk.setCode(updatedInk.getCode());
         existingInk.setEntryDate(updatedInk.getEntryDate());
 
