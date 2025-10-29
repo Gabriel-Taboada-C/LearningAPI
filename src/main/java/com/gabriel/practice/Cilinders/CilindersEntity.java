@@ -11,8 +11,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table (name = "cilindros")
 public class CilindersEntity {
 
@@ -31,6 +39,9 @@ public class CilindersEntity {
     @ManyToOne
     @JoinColumn (name = "color_id")
     private ColorsEntity color;
+    @ManyToOne
+    @JoinColumn (name = "product_id")
+    private ProductsEntity product;
 
 
     // Metodo simple para agregar los metros utilizados en el cilindro

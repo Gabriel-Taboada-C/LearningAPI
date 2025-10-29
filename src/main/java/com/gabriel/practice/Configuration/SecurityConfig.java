@@ -2,6 +2,7 @@ package com.gabriel.practice.Configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -52,10 +53,20 @@ public class SecurityConfig {
                  * una autenticacion basada en un token csrf value, pero vamos a utilizar JWT
                  */
                 .authorizeHttpRequests(authRequest -> authRequest
-                        .requestMatchers("/auth/**").permitAll() // Login y registro publicos
-                        .requestMatchers("/h2-console/**").permitAll() // h2 publico
+                        // Login publico
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        // Solo algunos roles pueden agregar nuevos usuarios
+                        .requestMatchers(HttpMethod.POST, "/auth/register").hasAnyRole("ADMIN", "USER_RRHH", "USER_CALI", "USER_PROD")
+                        // h2 publico
+                        .requestMatchers("/h2-console/**").permitAll()
+                        // Solo ADMIN y RRHH pueden leer datos de usuarios
+                        .requestMatchers(HttpMethod.GET, "users/**").hasAnyRole("ADMIN","USER_RRHH")
+                        // Solo el Rol ADMIN puede modificar datos de usuarios
+                        .requestMatchers(HttpMethod.POST, "/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
-                /* .formLogin(withDefaults()) Formulario de Login que provee Spring Security */
+                /* .formLogin(withDefaults()) Formulario de Login que provee Spring Security, no usaremos el por defecto */
                 .sessionManagement(sessionManager ->
                         sessionManager
                           .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

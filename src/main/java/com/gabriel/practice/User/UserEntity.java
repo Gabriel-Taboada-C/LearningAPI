@@ -3,7 +3,6 @@ package com.gabriel.practice.User;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,7 +40,7 @@ public class UserEntity implements UserDetails{
      * CON H2 ESTO DA ERROR Y NO GENERA LOS id POR NO
      * SOPORTAR LOS DATOS DE TIPO UUID
     */
-    private UUID id;
+    private Long id;
 
     @Column (name = "Nombre_de_Usuario", nullable = false)
     private String name;
@@ -55,9 +54,14 @@ public class UserEntity implements UserDetails{
     private Rol rol;
 
     public enum Rol {
-        ADMIN,
-        USER_ADMIN,
-        USER_COMMON
+        ADMIN, // MASTER ADMIN
+        USER_ADMIN, // SECTOR ADMINISTRACION
+        USER_RRHH, // SECTOR RECURSOS HUMANOS
+        USER_COMP, // SECTOR COMPRAS
+        USER_CALI, // SECTOR CALIDAD
+        USER_PROD, // SECTOR PRODUCCION
+        USER_MANT, // SECTOR MANTENIMIENTO
+        USER_OPER // SECTOR OPERARIOS
     }
 
     /* Crear otra entidad empleado,s con estos datos y agregar dni, edad, fecha de ingreso, puesto, trabaja actualmente (true o false), categoria.  */
@@ -65,7 +69,7 @@ public class UserEntity implements UserDetails{
      * Con @AllArgsConstructor nos evitamos tener que escribirlo
     */
 
-    public UserEntity (UUID id, String name, String password, LocalDateTime createdDate, Rol rol) {
+    public UserEntity (Long id, String name, String password, LocalDateTime createdDate, Rol rol) {
         this.id = id; //Agregado por cambio de version io.jsonwebtoken a 0.12.3 para poder usar .getId
         this.name = name;
         this.password = password;
@@ -86,11 +90,11 @@ public class UserEntity implements UserDetails{
      * Con @Data reemplazamos @Getter, @Setter y @AllArgsConstructor (ademas de @toString)
      */
 
-    public UUID getId () {
+    public Long getId () {
         return id;
     }
 
-    public void setId (UUID id) {
+    public void setId (Long id) {
         this.id = id;
     }
 

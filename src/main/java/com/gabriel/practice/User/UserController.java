@@ -58,7 +58,7 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping("/{id}") // Esto seria un getUserById
-    public UserEntity getUserById(@PathVariable UUID id) {
+    public UserEntity getUserById(@PathVariable Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("El usuario con el id: " + id + " no se encontró."));
 
@@ -80,7 +80,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserEntity updateUser(@PathVariable UUID id, @RequestBody UserEntity detallesUser) {
+    public UserEntity updateUser(@PathVariable Long id, @RequestBody UserEntity detallesUser) {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("El usuario con el id: " + id + " no se encontró."));
         user.setName(detallesUser.getName());
@@ -92,7 +92,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable UUID id) {
+    public String deleteUser(@PathVariable Long id) {
 
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("El usuario con el id: " + id + " no se encontró."));
