@@ -29,7 +29,7 @@ JPA usa esta clase para mapear filas a objetos Java.
 */
 @Builder
 // Importante: para relaciones como @OneToMany, se recomienda no usar @Builder directamente en la entidad, o usarlo con precaución usando @Builder.Default.
-@Table (name="Usuarios")
+@Table (name="usuarios")
 public class UserEntity implements UserDetails{
 
 /* UserDetails es una clase ya creada que sirve para la autenticacion */
@@ -54,7 +54,7 @@ public class UserEntity implements UserDetails{
     private Rol rol;
 
     public enum Rol {
-        ADMIN, // MASTER ADMIN
+        ADMIN, // MASTER ADMIN, creado en DataInitializer (CONFIGURATION)
         USER_ADMIN, // SECTOR ADMINISTRACION
         USER_RRHH, // SECTOR RECURSOS HUMANOS
         USER_COMP, // SECTOR COMPRAS

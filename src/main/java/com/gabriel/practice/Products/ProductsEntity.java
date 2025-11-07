@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,7 @@ que aún no fueron asignados por la base de datos.
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table (name = "productos")
 public class ProductsEntity {
 
     @Id

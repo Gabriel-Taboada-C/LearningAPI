@@ -6,14 +6,24 @@ spring:
     url: jdbc:postgresql://localhost:5433/practice_db
     username: postgres
     password: 1234
+    driver-class-name: org.postgresql.Driver
+    # Cuando tu app se conecta a la base de datos, necesita un driver JDBC (Java Database Connectivity), 
+    # que es una clase Java encargada de traducir las operaciones SQL a un formato que el motor de base de datos (PostgreSQL, MySQL, etc.) entienda.
+    # En el caso de PostgreSQL, ese driver es: org.postgresql.Driver
+    # Como el prefijo es jdbc:postgresql, Spring Boot suele detectar automáticamente que debe usar
+    # Sin embargo, en algunos entornos (por ejemplo, versiones viejas de Spring o configuraciones personalizadas de DataSource) puede no detectarlo correctamente, 
+    # y ahí es cuando agregarlo manualmente evita errores.
+    # No es obligatorio porque Spring Boot lo detectará automáticamente por el url,
+    # pero sí es buena práctica incluirlo.
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create  #Actualiza las tablas de datos. Con create las reiniciamos con cada inicio/cierre
     show-sql: true
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false  # recomendado por seguridad y rendimiento (evita un warning comun de hibernate)
 
 jwt:
   secret: N3W53C3TK3YF0RPR4CT1C300439454868KJJ03051996

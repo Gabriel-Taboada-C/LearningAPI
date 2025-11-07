@@ -25,7 +25,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table (name = "colors", uniqueConstraints = @UniqueConstraint(columnNames = "color"))
+@Table (name = "colores", uniqueConstraints = @UniqueConstraint(columnNames = "color"))
 public class ColorsEntity {
 
     @Id

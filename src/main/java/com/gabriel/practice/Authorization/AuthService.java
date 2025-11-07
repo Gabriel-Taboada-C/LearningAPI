@@ -42,7 +42,7 @@ public class AuthService {
         UserEntity user = UserEntity.builder()
             .name(request.getName())
             .password(passwordEncoder.encode(request.getPassword()))
-            .rol(Rol.ADMIN)
+            .rol(request.getRol() !=null ? request.getRol() : Rol.ADMIN) //Rol elegido o ADMIN por defecto
             .build();
         userRepository.save(user);
 

@@ -24,7 +24,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table (name = "Ordenes_de_Clientes")
+@Table (name = "ordenes_de_clientes")
 public class OrdersEntity {
 
     @Id

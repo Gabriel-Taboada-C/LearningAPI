@@ -54,17 +54,17 @@ public class SecurityConfig {
                  */
                 .authorizeHttpRequests(authRequest -> authRequest
                         // Login publico
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        // Solo algunos roles pueden agregar nuevos usuarios
-                        .requestMatchers(HttpMethod.POST, "/auth/register").hasAnyRole("ADMIN", "USER_RRHH", "USER_CALI", "USER_PROD")
+                        .requestMatchers("/auth/**").permitAll()
+                        // Solo algunos roles pueden agregar nuevos usuarios (cambiado para crear el primer usuario ADMIN)
+                        /* .requestMatchers(HttpMethod.POST, "/auth/register").permitAll() */
                         // h2 publico
                         .requestMatchers("/h2-console/**").permitAll()
                         // Solo ADMIN y RRHH pueden leer datos de usuarios
-                        .requestMatchers(HttpMethod.GET, "users/**").hasAnyRole("ADMIN","USER_RRHH")
+                        .requestMatchers(HttpMethod.GET, "/users/**").hasAnyAuthority("ADMIN","USER_RRHH")
                         // Solo el Rol ADMIN puede modificar datos de usuarios
-                        .requestMatchers(HttpMethod.POST, "/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/users/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/users/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated())
                 /* .formLogin(withDefaults()) Formulario de Login que provee Spring Security, no usaremos el por defecto */
                 .sessionManagement(sessionManager ->

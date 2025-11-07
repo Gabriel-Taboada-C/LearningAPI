@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+
 /* 
  * @Repository
  * Es la puerta de entrada a la base de datos.
@@ -14,6 +15,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserRepository extends JpaRepository <UserEntity,Long>{
 
     Optional<UserEntity> findByName(String name);
+    Optional<UserEntity> findById(Long id);
     /*Optional es una forma segura de manejar valores que pueden estar vacíos o nulos. 
      * Devuelve UN solo valor, para varios valores se utiliza List
     */
