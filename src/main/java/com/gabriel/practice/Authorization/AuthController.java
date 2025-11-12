@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +33,11 @@ public class AuthController {
 
         return ResponseEntity.ok(authService.register(request));
     }
-    
+
+    @PostMapping(value = "/refresh")
+    public ResponseEntity<AuthResponse> refresh(@RequestBody Map<String,String> request) {
+        return ResponseEntity.ok(authService.refreshToken(request.get("refreshToken")));
+    }
 }
 
 /* Una vez creado el JwtAuthenticationFilter,

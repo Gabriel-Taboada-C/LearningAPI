@@ -2,7 +2,6 @@ package com.gabriel.practice.Jwt;
 
 /* import java.security.Key; - con la version 0.12.3 no se usa mas*/
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -38,6 +37,17 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
 
+    //Duraciones de tokens
+    /*  Movidad a application.yml    
+    private final long ACCES_TOKEN_EXPIRATION = 1000 * 60 * 15; // 15 minutos
+    private final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 24 * 7; // 7 dias
+    */
+    @Value("${jwt.expiration}")
+    private long jwtExpiration;
+
+    @Value("${jwt.refresh-expiration}")
+    private long refreshExpiration;
+
     /* Debo cambiar el objeto UserEntity por UserDetails 
     public String getToken(UserEntity user) {
        ESTO ERA EN LA VERSION 0.11.5 DE io.jsonwebtoken
@@ -45,12 +55,13 @@ public class JwtService {
 
     // con version 0.12.3 - UserDetails cambia ----> UserEntity (para obtener la id de los claims)
     /* public String getToken(UserDetails user) */
+    // HashMap es una clase de colecciones que se utiliza para almacenar pares de clave valor
+    // Lo vamos a utilizar en los claims de la aplicacion para pasar info adicional en el token
+    /* EN DESUSO AL IMPLEMENTAR REFRESH Y ACCESS TOKEN
     public String getToken(UserEntity user) 
     {
-        // HashMap es una clase de colecciones que se utiliza para almacenar pares de clave valor
-        // Lo vamos a utilizar en los claims de la aplicacion para pasar info adicional en el token
         return getToken(new HashMap<>(),user);
-    }
+    } */
 
     /* CAMBIO DE VERSION DE 0.11.5 A 0.12.3
     Los metodos .set*** cambian a .***
@@ -66,10 +77,21 @@ public class JwtService {
             .compact();
     } */
 
-    public String getToken (Map<String,Object> extraClaims, UserEntity user) {
+    // ============================
+    // GENERACION DE TOKENS
+    // ============================
+
+    public String generateAccessToken (UserEntity user) {
+        return getToken(Map.of("userId",user.getId(),"type","acces"),user,jwtExpiration);
+    }
+
+    public String generateRefreshToken (UserEntity user) {
+        return getToken(Map.of("userId",user.getId(),"type","refresh"),user,refreshExpiration);
+    }
+
+    public String getToken (Map<String,Object> extraClaims, UserEntity user, long expirationTime) {
         //Nuevos metodos con version 0.12.3 - UserDetails cambia ----> UserEntity (para obtener la id de los claims)
-        return Jwts
-            .builder()
+        return Jwts.builder()
             .claims(extraClaims)
             //CREAMOS LOS CLAIMS UNO A UNO (HAY 2 FORMAS DE HACERLO, ESTA ES 1)
             .claim("userId", user.getId())
@@ -80,8 +102,8 @@ public class JwtService {
             .claim("email", user.getEmail()) */
             .subject(user.getUsername())
             .issuedAt(new Date(System.currentTimeMillis()))
-            .expiration(new Date(System.currentTimeMillis()+1000*60*60*24))
-            .signWith(getKey())
+            .expiration(new Date(System.currentTimeMillis()+expirationTime))
+            .signWith(getKey(),Jwts.SIG.HS256)
             .compact();
     }
 
@@ -109,6 +131,16 @@ public class JwtService {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username=getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public boolean isRefreshToken(String token) {
+        String type = Jwts.parser()
+                .verifyWith(getKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("type",String.class);
+        return "refresh".equals(type);
     }
 
 

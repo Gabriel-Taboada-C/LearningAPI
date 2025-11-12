@@ -27,6 +27,7 @@ spring:
 
 jwt:
   secret: N3W53C3TK3YF0RPR4CT1C300439454868KJJ03051996
-
+  expiration: 900000
+  refresh-expiration: 604800000
 # application.properties tiene PRIORIDAD por sobre application.yml
 #  Teniendo esto en cuenta tener cuidado con los duplicados

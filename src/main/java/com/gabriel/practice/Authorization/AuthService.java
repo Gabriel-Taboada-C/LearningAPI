@@ -28,16 +28,23 @@ public class AuthService {
      * esto nos permite obtener el valor de id para los claims
      * con UserDetails este parametro no puede obtenerse
      */
+// LOGIN DE USUARIO
     public AuthResponse login (LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getName(), request.getPassword()));
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getName(), request.getPassword()));
         UserEntity user = userRepository.findByName(request.getName()).orElseThrow();
-        String token = jwtService.getToken(user);
-        return AuthResponse.builder()
+        /* String token = jwtService.getToken(user); */ // En desuso luego de agregar refresh token
+
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        /* return AuthResponse.builder()
             .token(token)
-            .build();
+            .build(); */
+        return new AuthResponse(accessToken,refreshToken);
     }
 
-
+// REGISTRO DE USUARIO
+/* Antes: public AuthResponse register (RegisterRequest request) */
     public AuthResponse register (RegisterRequest request) {
         UserEntity user = UserEntity.builder()
             .name(request.getName())
@@ -45,10 +52,40 @@ public class AuthService {
             .rol(request.getRol() !=null ? request.getRol() : Rol.ADMIN) //Rol elegido o ADMIN por defecto
             .build();
         userRepository.save(user);
+        //IMPORTANTE: usar "user" (el guardado), no "request"
 
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
+        return new AuthResponse(accessToken, refreshToken);
+        
+        /*
+        Cambia al agregar el refresh token 
         return AuthResponse.builder()
-            .token(jwtService.getToken(user)) // Necesitamos que se genere automaticamente, por ello agregamos un JwtService
-            .build();
+        // Necesitamos que se genere automaticamente, por ello agregamos un JwtService
+        .token(jwtService.getToken(user)) 
+        .build(); */
     }
 // No olvidar implementar UserDetails en nuestra User Entity
+
+// REFRESH TOKEN (renueva los tokens)
+    public AuthResponse refreshToken (String refreshToken) {
+    // Validamos si es un refreshToken
+    if (!jwtService.isRefreshToken(refreshToken)) {
+        throw new RuntimeException("El token proporcionado no es un refresh token válido.");
+    }
+
+    String username = jwtService.getUsernameFromToken (refreshToken);
+
+    UserEntity user = userRepository.findByName(username)
+                .orElseThrow(()->new RuntimeException("Usuario no encontrado."));
+
+    if (!jwtService.isTokenValid(refreshToken, user)) {
+        throw new RuntimeException("El refresh token ha expirado o es inválido");
+    }
+
+    String newAccessToken = jwtService.generateAccessToken(user);
+
+    return new AuthResponse(newAccessToken,refreshToken);
+    }
 }
