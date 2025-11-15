@@ -38,7 +38,7 @@ public class JwtService {
     private String SECRET_KEY;
 
     //Duraciones de tokens
-    /*  Movidad a application.yml    
+    /*  Movidas a application.yml    
     private final long ACCES_TOKEN_EXPIRATION = 1000 * 60 * 15; // 15 minutos
     private final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 24 * 7; // 7 dias
     */

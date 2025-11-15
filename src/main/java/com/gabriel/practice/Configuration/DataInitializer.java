@@ -11,6 +11,8 @@ import com.gabriel.practice.User.UserEntity;
 import com.gabriel.practice.User.UserRepository;
 import com.gabriel.practice.User.UserEntity.Rol;
 
+//Esta clase se utiliza para crear un usuario con Rol ADMIN
+//Apenas se inicialia el programa
 @Configuration
 public class DataInitializer {
 
