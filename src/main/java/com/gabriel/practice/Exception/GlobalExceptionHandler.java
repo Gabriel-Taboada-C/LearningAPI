@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
         UserNotFoundException ex, HttpServletRequest request) 
         {
         String message = messageService.getMessage(
-            ex.getMessage(),
+            ex.getMessageKey(),
             ex.getArgs());
 
         ErrorResponse error = ErrorResponse.builder()

@@ -3,6 +3,7 @@ package com.gabriel.practice.User;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.gabriel.practice.Exception.MessageService;
+import com.gabriel.practice.Exception.UserNotFoundException;
 
 @RestController
 @RequestMapping("/users")
@@ -55,11 +59,12 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    private MessageService messageService;
 
     @GetMapping("/{id}") // Esto seria un getUserById
     public UserEntity getUserById(@PathVariable Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("El usuario con el id: " + id + " no se encontró."));
+                .orElseThrow(() -> new UserNotFoundException("user.notfound", id));
 
     }
 
@@ -91,13 +96,16 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
 
         UserEntity user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("El usuario con el id: " + id + " no se encontró."));
+                .orElseThrow(() -> new UserNotFoundException("user.notfound", id));
 
         userRepository.delete(user);
-        return "El usuario con el id: " + id + "se eliminó correctamente.";
+
+        String msg = messageService.getMessage("user.deleted");
+
+        return ResponseEntity.ok(msg);
     }
 
 }
