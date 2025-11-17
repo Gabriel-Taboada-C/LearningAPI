@@ -15,11 +15,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gabriel.practice.Exception.ErrorCode;
+import com.gabriel.practice.Exception.ErrorResponse;
 import com.gabriel.practice.Exception.MessageService;
 import com.gabriel.practice.Exception.UserNotFoundException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@Tag(name = "Users", description = "Operaciones sobre usuarios")
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -69,12 +78,13 @@ public class UserController {
     public UserEntity getUserById(@PathVariable Long id) {
         return userRepository.findById(id)
                 .orElseThrow(
-                    () -> new UserNotFoundException("user.notfound",
-                                                    ErrorCode.USER_NOT_FOUND,
-                                                    id));
+                        () -> new UserNotFoundException("user.notfound",
+                                ErrorCode.USER_NOT_FOUND,
+                                id));
 
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping // Esto seria un getUserAll
     public List<UserEntity> getUsers() {
         return userRepository.findAll();
@@ -84,13 +94,27 @@ public class UserController {
          */
     }
 
-    @PostMapping()
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    @Operation(summary = "Crear usuario", description = "Registra un nuevo usuario en el sistema", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos para registrar el usuario", required = true, content = @Content(mediaType = "application/json", examples = {
+            @ExampleObject(name = "Ejemplo válido", value = """
+                    {
+                      "username": "gabriel",
+                      "email": "gabriel@example.com",
+                      "password": "123456"
+                    }
+                    """)
+    })), responses = {
+            @ApiResponse(responseCode = "201", description = "Usuario creado correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserEntity.class))),
+            @ApiResponse(responseCode = "400", description = "Error de validación", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "El email ya existe", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    })
     public ResponseEntity<UserEntity> createUser(@Valid @RequestBody UserEntity user) {
         UserEntity created = userRepository.save(user);
 
-        //URI del recurso creado
+        // URI del recurso creado
         URI location = URI.create("/users/" + created.getId());
-        // La cabecera Location es obligatoria en un 201, porque indica la URL del recurso recién creado.
+        // La cabecera Location es obligatoria en un 201, porque indica la URL del
+        // recurso recién creado.
 
         return ResponseEntity
                 .created(location) // 201 created + Header Location
@@ -115,9 +139,9 @@ public class UserController {
 
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(
-                    () -> new UserNotFoundException("user.notfound",
-                                                    ErrorCode.USER_NOT_FOUND,
-                                                    id));
+                        () -> new UserNotFoundException("user.notfound",
+                                ErrorCode.USER_NOT_FOUND,
+                                id));
 
         userRepository.delete(user);
 
