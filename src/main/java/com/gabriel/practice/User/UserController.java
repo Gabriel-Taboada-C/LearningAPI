@@ -1,5 +1,6 @@
 package com.gabriel.practice.User;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gabriel.practice.Exception.ErrorCode;
 import com.gabriel.practice.Exception.MessageService;
 import com.gabriel.practice.Exception.UserNotFoundException;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
@@ -64,7 +68,10 @@ public class UserController {
     @GetMapping("/{id}") // Esto seria un getUserById
     public UserEntity getUserById(@PathVariable Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("user.notfound", id));
+                .orElseThrow(
+                    () -> new UserNotFoundException("user.notfound",
+                                                    ErrorCode.USER_NOT_FOUND,
+                                                    id));
 
     }
 
@@ -78,8 +85,16 @@ public class UserController {
     }
 
     @PostMapping()
-    public UserEntity createUser(@RequestBody UserEntity user) {
-        return userRepository.save(user);
+    public ResponseEntity<UserEntity> createUser(@Valid @RequestBody UserEntity user) {
+        UserEntity created = userRepository.save(user);
+
+        //URI del recurso creado
+        URI location = URI.create("/users/" + created.getId());
+        // La cabecera Location es obligatoria en un 201, porque indica la URL del recurso recién creado.
+
+        return ResponseEntity
+                .created(location) // 201 created + Header Location
+                .body(created); // Tambien devolvemos el usuario creado
         /* Guarda en la base de datos y devuelve el cliente */
     }
 
@@ -99,7 +114,10 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
 
         UserEntity user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("user.notfound", id));
+                .orElseThrow(
+                    () -> new UserNotFoundException("user.notfound",
+                                                    ErrorCode.USER_NOT_FOUND,
+                                                    id));
 
         userRepository.delete(user);
 

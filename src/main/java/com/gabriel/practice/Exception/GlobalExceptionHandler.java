@@ -30,6 +30,7 @@ public class GlobalExceptionHandler {
             .status(HttpStatus.NOT_FOUND.value())
             .error("Not Found")
             .message(message)
+            .code(ex.getErrorCode())
             .path(request.getRequestURI())
             .timestamp(LocalDateTime.now())
             .build();
@@ -37,6 +38,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    //Para Validaciones:
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(
         MethodArgumentNotValidException ex,
@@ -51,6 +53,7 @@ public class GlobalExceptionHandler {
             .status(HttpStatus.BAD_REQUEST.value())
             .error("Validation Error")
             .message(errors)
+            .code(ErrorCode.VALIDATION_ERROR)
             .path(request.getRequestURI())
             .timestamp(LocalDateTime.now())
             .build();
@@ -69,6 +72,7 @@ public class GlobalExceptionHandler {
             .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
             .error("Internal Server Error")
             .message(message)
+            .code(ErrorCode.INTERNAL_ERROR)
             .path(request.getRequestURI())
             .timestamp(LocalDateTime.now())
             .build();
