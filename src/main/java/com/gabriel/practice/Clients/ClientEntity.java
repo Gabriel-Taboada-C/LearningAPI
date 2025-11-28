@@ -2,6 +2,7 @@ package com.gabriel.practice.Clients;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gabriel.practice.Orders.OrdersEntity;
 import com.gabriel.practice.Products.ProductsEntity;
 
@@ -25,17 +26,19 @@ public class ClientEntity {
     private String name;
     @Column (name = "contacto")
     private String contact;
-    @Column (name = "cúmero_de_teléfono")
+    @Column (name = "numero_de_telefono")
     private Long number;
-    @Column (name = "correo_electrónico")
+    @Column (name = "correo_electronico")
     private String email;
-    @Column (name = "dirección")
+    @Column (name = "direccion")
     private String direction;
     /* Relacion OneToMany a cantidad de productos: 1 cliente tiene muchos productos */
     @OneToMany (mappedBy = "client")
+    /* @JsonIgnore */
     private List<ProductsEntity> products;
     /* Relacion OneToMany a ordenes solicitadas */
     @OneToMany (mappedBy = "client")
+    /* @JsonIgnore */
     private List<OrdersEntity> orders;
 
     /* Constructor */

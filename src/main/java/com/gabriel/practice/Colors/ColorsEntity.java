@@ -3,6 +3,7 @@ package com.gabriel.practice.Colors;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gabriel.practice.Cilinders.CilindersEntity;
 import com.gabriel.practice.Inks.InksEntity;
 
@@ -36,8 +37,10 @@ public class ColorsEntity {
     @Column (nullable = false)
     private String hexCode;
     @OneToMany  (mappedBy = "color")
+    /* @JsonIgnore */
     private List<CilindersEntity> cilindros = new ArrayList<>();
     @ManyToMany (mappedBy = "colores")
+    /* @JsonIgnore */
     private List<InksEntity> mark = new ArrayList<>();
 
     /* Si ambos atributos en las otras entidades se llaman “color”, entonces tendremos ambos mappedBy = "color" 

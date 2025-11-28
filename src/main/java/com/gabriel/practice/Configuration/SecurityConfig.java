@@ -63,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         // Solo ADMIN y RRHH pueden leer datos de usuarios
                         .requestMatchers(HttpMethod.GET, "/users/**").hasAnyAuthority("ADMIN","USER_RRHH")
+                        .requestMatchers(HttpMethod.GET, "/inks/**").hasAnyAuthority("ADMIN","USER_PROD")
                         // Solo el Rol ADMIN puede modificar datos de usuarios
                         .requestMatchers(HttpMethod.POST, "/users/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/users/**").hasAuthority("ADMIN")

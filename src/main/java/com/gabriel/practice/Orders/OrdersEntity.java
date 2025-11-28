@@ -41,7 +41,7 @@ public class OrdersEntity {
     private ProductsEntity product;
     @Column (name = "numero_de_orden")
     private Long orderNumber;
-    @Column (name = "dirección")
+    @Column (name = "direccion")
     private String address;
     @Column(name = "transporte")
     private String carry;

@@ -1,6 +1,8 @@
 package com.gabriel.practice.Products;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -16,6 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -56,17 +59,17 @@ public class ProductsEntity {
     private String longitud;
     /* @Column (name = "cantidad_de_cilindros", nullable = false)
     private Long cilinders; */
-    @OneToOne (mappedBy = "product", cascade = CascadeType.ALL)
-    private CilindersEntity cilinders;
-    @Column (name = "material_de_impresión", nullable = false)
+    @OneToMany (mappedBy = "product", cascade = CascadeType.ALL)
+    private List<CilindersEntity> cilinders=new ArrayList<>();
+    @Column (name = "material_de_impresion", nullable = false)
     private String impMaterial;
-    @Column (name = "material_de_laminación")
+    @Column (name = "material_de_laminacion")
     private String lamMaterial;
-    @Column (name = "descripción_del_producto", nullable = false)
+    @Column (name = "descripcion_del_producto", nullable = false)
     private String description;
 
     @CreationTimestamp
-    @Column (name = "dia_de_creación", updatable = false)
+    @Column (name = "dia_de_creacion", updatable = false)
     private LocalDateTime entryDay;
 
 }
