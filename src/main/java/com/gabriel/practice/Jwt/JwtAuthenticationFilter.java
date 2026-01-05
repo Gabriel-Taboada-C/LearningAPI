@@ -52,26 +52,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         username = jwtService.getUsernameFromToken(token);
 
-        //Si el token es nulo y no se encuentra en el SecurityContextHolder lo buscamos en la DB
-        if (username!=null && SecurityContextHolder.getContext().getAuthentication()==null)
-        {
-            UserDetails userDetails=userDetailsService.loadUserByUsername(username);
+        // Si el token es nulo y no se encuentra en el SecurityContextHolder lo buscamos
+        // en la DB
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            //Si el token es valido debo actualizar el SecurityContextHolder
-            if (jwtService.isTokenValid(token,userDetails))
-            {
+            // Si el token es valido debo actualizar el SecurityContextHolder
+            if (jwtService.isTokenValid(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities());
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
-        /* Debo configurar los siguientes metodos en JwtService:
-        - getUsernameFromToken()
-        - isTokenValid */
+        /*
+         * Debo configurar los siguientes metodos en JwtService:
+         * - getUsernameFromToken()
+         * - isTokenValid
+         */
 
         filterChain.doFilter(request, response);
     }
@@ -87,17 +88,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         // Vamos a buscar en el encabezado la propiedad de autenticacion
 
-        /* Este encabezado String va a comenzar con la palabra Bearer
+        /*
+         * Este encabezado String va a comenzar con la palabra Bearer
          * debemos verificar esto para retornar el token
          * ya que vamos a tener que extraer el token de esa cadena
          * de caracteres sin incorporar la palabra Bearer
          */
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
-            /* Accedemos a una estructura de control para verificar lo mencionado
+            /*
+             * Accedemos a una estructura de control para verificar lo mencionado
              * utilizamos la libreria StringUtils de springframeworks
              */
-            return authHeader.substring(7); //El token comienza a partir de la posicion 7
+            return authHeader.substring(7); // El token comienza a partir de la posicion 7
         }
         return null;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+
+         return path.startsWith("/ws")
+        || path.startsWith("/topic")
+        || path.startsWith("/queue")
+        || path.equals("/")
+        || path.equals("/chat.html")
+        || path.startsWith("/auth");
     }
 }

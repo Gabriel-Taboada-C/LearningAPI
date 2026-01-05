@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Test</title>
+</head>
+<body>
+
+<h1>WebSocket funcionando</h1>
+<p>Mirá la consola del navegador (F12)</p>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+<script>
+    var socket = new SockJS('/ws');
+    var stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function () {
+        console.log("Conectado al WS");
+
+        stompClient.subscribe('/topic/messages', function (msg) {
+            console.log("Mensaje recibido:", msg.body);
+        });
+
+        stompClient.send("/app/chat", {}, "Hola servidor");
+    });
+</script>
+
+</body>
+</html>
