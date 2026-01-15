@@ -1,20 +1,23 @@
 package com.gabriel.practice.WebSocket;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.security.Principal;
+
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 public class ChatController {
 
     @MessageMapping("/chat")
     @SendTo("/topic/messages")
-    public String sendMessage(String message) {
+    public String sendMessage(String message, Principal principal) {
         System.out.println("Llego el mensaje: " + message);
-        return "Servidor dice: " + message;
+        String user = (principal != null)
+            ? principal.getName()
+            : "Anonim";
+
+    return user + ": " + message;
     }
 
 /*     @Autowired

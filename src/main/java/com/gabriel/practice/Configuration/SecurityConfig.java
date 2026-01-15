@@ -60,7 +60,6 @@ public class SecurityConfig {
                                                                 "/",
                                                                 "/index.html",
                                                                 "/chat.html",
-                                                                "/error",
                                                                 "/favicon.ico",
                                                                 "/ws/**",
                                                                 "/topic/**",
