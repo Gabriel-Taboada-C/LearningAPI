@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -27,5 +27,36 @@
     });
 </script>
 
+</body>
+</html>
+ -->
+
+ <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+</head>
+<body>
+
+<h2>Login</h2>
+
+<input id="name" placeholder="Usuario">
+<input id="password" type="password">
+<button onclick="login()">Ingresar</button>
+
+<p id="error"></p>
+
+<script src="auth.js"></script>
+
+
+<!-- 
+❌ URL INVÁLIDA
+<script src="/src/main/resources/static/auth.js"></script>
+Esta ruta no es accesible desde el navegador porque:
+Viola el sandbox de Spring
+Es bloqueado por Security → 403
+Nunca va a funcionar
+-->
 </body>
 </html>

@@ -36,11 +36,14 @@ public class JwtStompInterceptor implements ChannelInterceptor {
         }
 
         // SOLO interceptamos el CONNECT
+        // El JWT se valida solo al conectar, no en cada mensaje, no penalizando el rendimiento y el usuario
+        // queda asociado todo el tiempo que dure la conexión WebSocket
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
 
             String authHeader = accessor.getFirstNativeHeader("Authorization");
 
             // 👉 SI NO HAY TOKEN: dejamos conectar SIN usuario
+            //Esto permite WebSocket publicos, canales de solo lectura y flexiblidad por rol.
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 System.out.println("⚠️ STOMP CONNECT sin JWT");
                 return message;

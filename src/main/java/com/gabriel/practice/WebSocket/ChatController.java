@@ -2,8 +2,10 @@ package com.gabriel.practice.WebSocket;
 
 import java.security.Principal;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -20,7 +22,10 @@ public class ChatController {
     return user + ": " + message;
     }
 
-/*     @Autowired
+
+    // Mensaje privado
+
+    @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
     public void sendPrivateMessage(String username, String message){
@@ -28,5 +33,7 @@ public class ChatController {
             username,
             "/queue/notifications",
             message); 
-    } */
+    }
+
+    // Resultado: /user/{username}/queue/notifications
 }

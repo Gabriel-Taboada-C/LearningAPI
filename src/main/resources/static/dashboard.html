@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+</head>
+<body>
+
+<h2>Dashboard</h2>
+<button onclick="logout()">Logout</button>
+
+<div id="messages"></div>
+
+<script src="auth.js"></script>
+<script src="ws.js"></script>
+
+<script>
+  // 🔒 Protección básica
+  if (!localStorage.getItem("accessToken")) {
+    window.location.href = "index.html";
+  }
+
+  connectWebSocket();
+</script>
+
+</body>
+</html>

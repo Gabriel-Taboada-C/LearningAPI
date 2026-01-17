@@ -1,36 +1,25 @@
-/* package com.gabriel.practice.Configuration;
+package com.gabriel.practice.Configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
-import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
+import org.springframework.messaging.simp.config.ChannelRegistration;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-@Configuration
-public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer{
+import com.gabriel.practice.Jwt.JwtStompInterceptor;
 
 // El cliente podría suscribirse a otro chat si no hay seguridad. Por eso se debe configurar la seguridad por rol 
+@Configuration
+@EnableWebSocket
+public class WebSocketSecurityConfig implements WebSocketMessageBrokerConfigurer {
 
-
-    // 🔹 Estrategia 1: Canales por rol (simple)
-
-    @Override
-    protected void configureInbound (MessageSecurityMetadataSourceRegistry messages) {
-        messages
-                .simpSubscribeDestMatchers("/topic/admin/**").hasRole("ADMIN")
-                .simpSubscribeDestMatchers("/topic/user/**").hasAnyRole("USER", "ADMIN")
-                .anyMessage().authenticated();
-    }
+    // Registramos el interceptor JWT en el canal de entrada de mensajes
+    @Autowired
+    private JwtStompInterceptor jwtStompInterceptor;
 
     @Override
-    protected boolean sameOriginDisabled() {
-        return true;
-    }
-
-    // Estrategia 2: Usuario privado + rol (recomendada)
-
-    for (User user:usuariosAdmin) {
-        messagingTemplate.convertAndSendToUser(
-            user.getUsername(),
-            "/queue/notifications",
-            "Alerta critica"); 
-        }
-} */
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(jwtStompInterceptor);
+        
+}
+}
