@@ -12,6 +12,7 @@
 
 <input type="text" id="messageInput" placeholder="Escribí un mensaje">
 <button onclick="sendMessage()">Enviar</button>
+<button onclick="toDashboard()">Ir a Dashboard</button>
 
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
@@ -51,6 +52,10 @@
         const input = document.getElementById("messageInput");
         stompClient.send("/app/chat", {}, input.value);
         input.value = "";
+    }
+
+    function toDashboard() {
+        window.location.href = "dashboard.html";
     }
 </script>
 

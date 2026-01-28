@@ -113,6 +113,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         || path.startsWith("/queue")
         || path.equals("/")
         || path.equals("/chat.html")
+        || path.equals("/dashboard.html")
         || path.startsWith("/auth");
     }
 }

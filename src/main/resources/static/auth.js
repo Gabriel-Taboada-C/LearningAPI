@@ -24,3 +24,8 @@ function login() {
     document.getElementById("error").innerText = err.message;
   });
 }
+
+function toChat() {
+  window.location.href = "chat.html";
+}
+

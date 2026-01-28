@@ -3,8 +3,18 @@ let socket;
 function connectWebSocket() {
   const token = localStorage.getItem("token");
 
-  socket = new WebSocket(
-    `ws://localhost:8080/ws?token=${localStorage.getItem("token")}`
+  if (!token) {
+        console.error("No token");
+        return;
+    }
+
+  const socket = new SockJS('/ws');
+  const stompClient = Stomp.over(socket);
+
+  stompClient.connect(
+      { Authorization: "Bearer " + token },
+      () => console.log("WS conectado"),
+      err => console.error("WS error", err)
   );
 
   socket.onopen = () => {
