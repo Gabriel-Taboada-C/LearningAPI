@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.apache.catalina.connector.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,34 +27,35 @@ public class ProductsController {
     }
 
     @GetMapping
-    public List<ProductsEntity> getProducts() {
+    public ResponseEntity<List<ProductsEntity>> getProducts() {
 
-        return productsService.getAllProducts();
+        return ResponseEntity.ok(productsService.getAllProducts());
     }
     
     @GetMapping("/{id}")
-    public ProductsEntity getProductsById (@PathVariable Long id) {
-        
-        return productsService.getProductById(id);
+    public ResponseEntity<ProductsEntity> getProductsById (@PathVariable Long id) {
+
+        return ResponseEntity.ok(productsService.getProductById(id));
     }
 
-    @PostMapping("/{id}")
-    public ProductsEntity createProduct(@RequestBody ProductsEntity product) {
-        
-        return productsService.saveProduct(product);
+    @PostMapping()
+    public ResponseEntity<ProductsEntity> createProduct(@RequestBody ProductsEntity product) {
+
+        ProductsEntity saved = productsService.saveProduct(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productsService.saveProduct(saved));
     }
 
     @PutMapping("/{id}")
-    public ProductsEntity updateProduct(@PathVariable Long id, @RequestBody ProductsEntity updatedProduct) {
-        
-        return productsService.updateProduct(id, updatedProduct);
+    public ResponseEntity<ProductsEntity> updateProduct(@PathVariable Long id, @RequestBody ProductsEntity updatedProduct) {
+
+        return ResponseEntity.ok(productsService.updateProduct(id, updatedProduct));
     }
 
     @DeleteMapping ("/{id}")
-    public String deleteProduct (@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct (@PathVariable Long id) {
 
         productsService.deleteProduct(id);
-        return "El producto con el id: " + id + " se eliminó correctamente.";
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content
     }
     
 }

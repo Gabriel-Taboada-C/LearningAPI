@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,32 +27,33 @@ public class CilindersController {
     }
 
     @GetMapping
-    public List<CilindersEntity> getCilinders() {
-        return cilindersService.getCilinders();
+    public ResponseEntity<List<CilindersEntity>> getCilinders() {
+        return ResponseEntity.ok(cilindersService.getCilinders());
     }
 
     @GetMapping("/{id}")
-    public CilindersEntity getCilindersById(@PathVariable Long id) {
-        return cilindersService.getCilindersById(id);
+    public ResponseEntity<CilindersEntity> getCilindersById(@PathVariable Long id) {
+        return ResponseEntity.ok(cilindersService.getCilindersById(id));
     }
 
-    @PostMapping("/{id}")
-    public CilindersEntity createCilinder (@RequestBody CilindersEntity cilinder) {
-        
-        return cilindersService.saveCilinder(cilinder);
+    @PostMapping()
+    public ResponseEntity<CilindersEntity> createCilinder (@RequestBody CilindersEntity cilinder) {
+
+        CilindersEntity saved = cilindersService.saveCilinder(cilinder);
+        return ResponseEntity.status(HttpStatus.CREATED).body(cilindersService.saveCilinder(saved));
     }
 
     @PutMapping("/{id}")
-    public CilindersEntity updateCilinder(@PathVariable Long id, @RequestBody CilindersEntity cilinder) {
+    public ResponseEntity<CilindersEntity> updateCilinder(@PathVariable Long id, @RequestBody CilindersEntity cilinder) {
 
-        return cilindersService.updateCilinder(id, cilinder);
+        return ResponseEntity.ok(cilindersService.updateCilinder(id, cilinder));
     }
 
-    @DeleteMapping
-    public String deleteCilinder (@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCilinder (@PathVariable Long id) {
         cilindersService.deleteCilinder(id);
 
-        return "El cilindro con el id " + id + " se eliminó correctamente.";
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content
     }
     
     

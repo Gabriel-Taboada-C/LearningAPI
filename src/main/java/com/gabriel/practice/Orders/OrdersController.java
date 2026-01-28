@@ -2,6 +2,9 @@ package com.gabriel.practice.Orders;
 
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,33 +25,34 @@ public class OrdersController {
     }
 
     @GetMapping
-    public List<OrdersEntity> getOrders() {
-        return ordersService.getOrders();
+    public ResponseEntity<List<OrdersEntity>> getOrders() {
+        return ResponseEntity.ok(ordersService.getOrders());
     }
     
 
     @GetMapping("/{id}")
-    public OrdersEntity getOrderById(@PathVariable Long id) {
-        return ordersService.getOrderById(id);
+    public ResponseEntity<OrdersEntity> getOrderById(@PathVariable Long id) {
+        return ResponseEntity.ok(ordersService.getOrderById(id));
     }
 
-    @PostMapping("/{id}")
-    public OrdersEntity createOrder(@RequestBody OrdersEntity order) {
+    @PostMapping()
+    public ResponseEntity<OrdersEntity> createOrder(@RequestBody OrdersEntity order) {
         
-        return ordersService.saveOrder(order);
+        OrdersEntity saved = ordersService.saveOrder(order);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ordersService.saveOrder(saved));
     }
 
     @PutMapping("/{id}")
-    public OrdersEntity updateOrder (@PathVariable Long id, @RequestBody OrdersEntity order) {
+    public ResponseEntity<OrdersEntity> updateOrder (@PathVariable Long id, @RequestBody OrdersEntity order) {
         
-        return ordersService.updateOrder(id, order);
+        return ResponseEntity.ok(ordersService.updateOrder(id, order));
     }
-    
-    @DeleteMapping
-    public String deleteOrder (@PathVariable Long id) {
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrder (@PathVariable Long id) {
         ordersService.deleteOrder(id);
 
-        return "El producto con el id: " + id + " se eliminó correctamente.";
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content
     }
 
    /*  

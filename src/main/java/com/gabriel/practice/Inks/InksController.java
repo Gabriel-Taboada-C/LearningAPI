@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.apache.catalina.connector.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,32 +25,33 @@ public class InksController {
     }
 
     @GetMapping
-    public List<InksEntity> getInks() {
-        return inksService.getInks();
+    public ResponseEntity<List<InksEntity>> getInks() {
+        return ResponseEntity.ok(inksService.getInks());
     }
 
     @GetMapping("/{id}")
-    public InksEntity getInksById(@PathVariable Long id) {
-        return inksService.getInksById(id);
+    public ResponseEntity<InksEntity> getInksById(@PathVariable Long id) {
+        return ResponseEntity.ok(inksService.getInksById(id));
     }
 
-    @PostMapping("/{id}")
-    public InksEntity createInk (@RequestBody InksEntity ink) {
+    @PostMapping()
+    public ResponseEntity<InksEntity> createInk (@RequestBody InksEntity ink) {
 
-        return inksService.saveInk(ink);
+        InksEntity saved = inksService.saveInk(ink);
+        return ResponseEntity.status(HttpStatus.CREATED).body(inksService.saveInk(saved));
     }
 
     @PutMapping("/{id}")
-    public InksEntity updateInk(@PathVariable Long id, @RequestBody InksEntity ink) {
-        
-        return inksService.updateInk(id, ink);
+    public ResponseEntity<InksEntity> updateInk(@PathVariable Long id, @RequestBody InksEntity ink) {
+
+        return ResponseEntity.ok(inksService.updateInk(id, ink));
     }
-    
-    @DeleteMapping
-    public String deleteInk (@PathVariable Long id) {
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteInk (@PathVariable Long id) {
         inksService.deleteInk(id);
 
-        return "La tinta con el id: " + id + " se eliminó correctamente.";
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content
     }
     
 }

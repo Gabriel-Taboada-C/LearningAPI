@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,33 +26,34 @@ public class ClientController {
     }
 
     @GetMapping
-    public List<ClientEntity> getClients() {
+    public ResponseEntity<List<ClientEntity>> getClients() {
         
-        return clientService.getClients();
+        return ResponseEntity.ok(clientService.getClients());
     }
 
     @GetMapping("/{id}")
-    public ClientEntity getClientById(@PathVariable Long id) {
+    public ResponseEntity<ClientEntity> getClientById(@PathVariable Long id) {
         
-        return clientService.getClientsById(id);
+        return ResponseEntity.ok(clientService.getClientsById(id));
     }
 
-    @PostMapping("/{id}")
-    public ClientEntity createClient(@RequestBody ClientEntity client) {
+    @PostMapping //No lleva ("/{id}") porque el id lo genera la base de datos
+    public ResponseEntity<ClientEntity> createClient(@RequestBody ClientEntity client) {
 
-        return clientService.saveClient(client);
+        ClientEntity saved = clientService.saveClient(client);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
     
     @PutMapping("/{id}")
-    public ClientEntity updateClient(@PathVariable Long id, @RequestBody ClientEntity client) {
-        
-        return clientService.updateClient(id, client);
+    public ResponseEntity<ClientEntity> updateClient(@PathVariable Long id, @RequestBody ClientEntity client) {
+
+        return ResponseEntity.ok(clientService.updateClient(id, client));
     }
     
     @DeleteMapping("/{id}")
-    public String deleteClient (@PathVariable Long id) {
+    public ResponseEntity<Void> deleteClient (@PathVariable Long id) {
         clientService.deleteClient(id);
 
-        return "El cliente con el id: " + id + " se eliminó correctamente.";
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content
     }
 }

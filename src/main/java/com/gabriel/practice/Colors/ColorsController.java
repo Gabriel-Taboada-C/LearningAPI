@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,32 +28,33 @@ public class ColorsController {
     }
 
     @GetMapping
-    public List <ColorsEntity> getColors() {
-        return colorsService.getColors();
+    public ResponseEntity<List<ColorsEntity>> getColors() {
+        return ResponseEntity.ok(colorsService.getColors());
     }
 
     @GetMapping("/{id}")
-    public ColorsEntity getColorsById(@PathVariable Long id) {
-        return colorsService.getColorsById(id);
+    public ResponseEntity<ColorsEntity> getColorsById(@PathVariable Long id) {
+        return ResponseEntity.ok(colorsService.getColorsById(id));
     }
 
-    @PostMapping("/{id}")
-    public ColorsEntity createColor(@RequestBody ColorsEntity color) {
-        
-        return colorsService.saveColor(color);
+    @PostMapping()
+    public ResponseEntity<ColorsEntity> createColor(@RequestBody ColorsEntity color) {
+
+        ColorsEntity saved = colorsService.saveColor(color);
+        return ResponseEntity.status(HttpStatus.CREATED).body(colorsService.saveColor(saved));
     }
 
     @PutMapping("/{id}")
-    public ColorsEntity updateColor(@PathVariable Long id, @RequestBody ColorsEntity color) {
-        
-        return colorsService.updateColor(id, color);
+    public ResponseEntity<ColorsEntity> updateColor(@PathVariable Long id, @RequestBody ColorsEntity color) {
+
+        return ResponseEntity.ok(colorsService.updateColor(id, color));
     }
-    
-    @DeleteMapping
-    public String deleteColor (@PathVariable Long id) {
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteColor (@PathVariable Long id) {
         colorsService.deleteColor(id);
 
-        return "El color con el id " + id + " se eliminó correctamente.";
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content
     }
     
     
